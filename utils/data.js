@@ -50,12 +50,12 @@ Lung sounds are normal.
 Heart is regular rate and rhythm with normal S1 and S2.
 Respiratory rate 12, O2 saturation 99% on room air.
 The clinician suspects a viral etiology based on the constellation of symptoms and physical findings.
-- Ordered influenza test
-- Ordered COVID-19 test
-- Ordered strep throat test
-- Continue acetaminophen as needed for symptomatic relief
-- Rest and increased fluid intake recommended
-- Clinician to call patient with test results and further management instructions`,
+[x] Ordered influenza test
+[x] Ordered COVID-19 test
+[x] Ordered strep throat test
+[]Continue acetaminophen as needed for symptomatic relief
+[x] Rest and increased fluid intake recommended
+[] Clinician to call patient with test results and further management instructions`,
     patientInstructions: `Dear Mr. Don Joh,
 
 Thank you for visiting the clinic today.
@@ -125,11 +125,11 @@ Heart is regular rate and rhythm with no murmurs.
 Lungs clear to auscultation.
 No edema in extremities.
 Current medication (lisinopril 10 mg daily) appears to need adjustment based on readings.
-- Ordered complete blood count (CBC) and lipid panel
-- Blood pressure monitoring at home recommended
-- Increase lisinopril to 20 mg daily
-- Lifestyle modifications: reduce salt intake, increase physical activity (30 min most days)
-- Follow-up appointment in 4 weeks to reassess blood pressure control`,
+[x] Ordered complete blood count (CBC) and lipid panel
+[x] Blood pressure monitoring at home recommended
+[] Increase lisinopril to 20 mg daily
+[x] Lifestyle modifications: reduce salt intake, increase physical activity (30 min most days)
+[] Follow-up appointment in 4 weeks to reassess blood pressure control`,
     patientInstructions: `Dear Ms. Jane Smith,
 
 It was great seeing you for your annual checkup today.
@@ -178,10 +178,10 @@ Reports stable symptoms with occasional wheezing triggered by cold weather, mana
 Last refill was 3 months ago, and usage aligns with as-needed dosing.
 No recent exacerbations or emergency visits reported.
 Lungs clear today with no wheezing noted.
-- Refilled albuterol inhaler (90 mcg, 200 puffs), 1-2 puffs as needed every 4-6 hours
-- Reviewed proper inhaler technique
-- Advised to monitor symptoms and seek care if wheezing increases or shortness of breath occurs
-- Annual asthma review recommended in 6 months`,
+[x] Refilled albuterol inhaler (90 mcg, 200 puffs), 1-2 puffs as needed every 4-6 hours
+[x] Reviewed proper inhaler technique
+[x] Advised to monitor symptoms and seek care if wheezing increases or shortness of breath occurs
+[] Annual asthma review recommended in 6 months`,
     patientInstructions: `Dear Mr. Robert Johnson,
 
 Thanks for stopping by today to address your medication needs.
@@ -226,9 +226,9 @@ She mentions occasional fatigue but attributes it to work stress.`,
 Physical exam: Heart regular rate and rhythm, lungs clear, abdomen soft and non-tender, no edema in extremities.`,
     assessmentPlan: `Type 2 Diabetes Mellitus, well-controlled.
 Continue current management with metformin 500 mg twice daily.
-Encourage ongoing lifestyle modifications.
-Ordered HbA1c test to monitor long-term glucose control.
-Follow-up in 3 months.`,
+[x]Encourage ongoing lifestyle modifications.
+[x] Ordered HbA1c test to monitor long-term glucose control.
+[] Follow-up in 3 months.`,
     patientInstructions: `Dear Ms. Alice Brown,
 
 It was good to see you today for your diabetes follow-up.
