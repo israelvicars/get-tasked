@@ -116,6 +116,8 @@ const AssessmentPlan = ({ data }) => {
   const [showEditor, setShowEditor] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [hideCompleted, setHideCompleted] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const textareaRef = useRef(null);
   
   // Parse content for tasks and update state
   const parseTasksFromContent = (text) => {
@@ -157,6 +159,16 @@ const AssessmentPlan = ({ data }) => {
     }
   }, [data?.content]);
   
+  // Focus textarea when editing starts
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      // Place cursor at the end of the text
+      textareaRef.current.selectionStart = textareaRef.current.value.length;
+      textareaRef.current.selectionEnd = textareaRef.current.value.length;
+    }
+  }, [isEditing]);
+  
   // Toggle task completion
   const toggleTask = (taskId) => {
     const updatedTasks = tasks.map(task => {
@@ -190,7 +202,12 @@ const AssessmentPlan = ({ data }) => {
   };
   
   const handleEditClick = () => {
-    setShowEditor(true);
+    setIsEditing(true);
+  };
+  
+  const handleDoneClick = () => {
+    setIsEditing(false);
+    parseTasksFromContent(content);
   };
   
   const handleSave = (newContent) => {
@@ -201,6 +218,32 @@ const AssessmentPlan = ({ data }) => {
   
   const handleCancel = () => {
     setShowEditor(false);
+  };
+  
+  const handleTextChange = (e) => {
+    setContent(e.target.value);
+  };
+  
+  const handleBlur = () => {
+    setIsEditing(false);
+    parseTasksFromContent(content);
+  };
+  
+  const handleKeyDown = (e) => {
+    // Save on Ctrl+Enter or Cmd+Enter
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      setIsEditing(false);
+      parseTasksFromContent(content);
+    }
+    // Cancel on Escape
+    if (e.key === 'Escape') {
+      setIsEditing(false);
+      // Revert to original content
+      if (data?.content) {
+        setContent(data.content);
+        parseTasksFromContent(data.content);
+      }
+    }
   };
   
   // Calculate task progress
@@ -244,7 +287,16 @@ const AssessmentPlan = ({ data }) => {
     </Button>
   );
   
-  const editButton = (
+  const editButton = isEditing ? (
+    <Button 
+      variant="primary" 
+      size="small" 
+      className="flex items-center mr-2"
+      onClick={handleDoneClick}
+    >
+      <MdCheck className="mr-1" /> Done
+    </Button>
+  ) : (
     <Button 
       variant="secondary" 
       size="small" 
@@ -257,8 +309,29 @@ const AssessmentPlan = ({ data }) => {
   
   // Render content with task checkboxes
   const renderContentWithTasks = () => {
+    if (isEditing) {
+      return (
+        <textarea
+          ref={textareaRef}
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] min-h-[200px]"
+          value={content}
+          onChange={handleTextChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          style={{ resize: 'vertical' }}
+        />
+      );
+    }
+    
     if (tasks.length === 0) {
-      return <div className="whitespace-pre-wrap">{content}</div>;
+      return (
+        <div 
+          className="whitespace-pre-wrap cursor-pointer" 
+          onClick={handleEditClick}
+        >
+          {content}
+        </div>
+      );
     }
     
     const lines = content.split('\n');
@@ -286,9 +359,15 @@ const AssessmentPlan = ({ data }) => {
           />
         );
       } else {
-        // Regular line, not a task
+        // Regular line, not a task - make it clickable for editing
         renderedContent.push(
-          <div key={`line-${index}`} className="my-1">{line}</div>
+          <div 
+            key={`line-${index}`} 
+            className="my-1 cursor-pointer" 
+            onClick={handleEditClick}
+          >
+            {line}
+          </div>
         );
       }
     });
