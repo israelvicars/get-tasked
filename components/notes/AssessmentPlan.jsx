@@ -298,10 +298,11 @@ const AssessmentPlan = ({ data }) => {
   
   return (
     <>
-      <div className="p-4">
+      <div className="py-2 px-4">
         <CollapsibleSection 
           title={data?.title || 'Assessment & Plan'}
           actions={actionButtons}
+          defaultOpen={data?.defaultOpen !== undefined ? data?.defaultOpen : true}
         >
           {totalTaskCount > 0 && (
             <div className="mb-4">

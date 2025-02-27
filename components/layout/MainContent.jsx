@@ -1,13 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PatientProfile from '../notes/PatientProfile';
 import NoteActionBar from '../notes/NoteActionBar';
-import AssessmentPlan from '../notes/AssessmentPlan';
-import PatientInstructions from '../notes/PatientInstructions';
+import NotesContent from '../notes/NotesContent';
 import { formatDate } from '../../utils/formatters';
 
-const MainContent = ({ selectedNote }) => {
+/**
+ * MainContent component
+ * @param {Object} props
+ * @param {Object} props.selectedNote - The selected note to display
+ * @param {boolean} [props.showSidebar=false] - Whether the sidebar is visible (for mobile)
+ */
+const MainContent = (props) => {
+  const { selectedNote, showSidebar = false } = props;
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // On mobile, if sidebar is visible, don't render the component at all
+  if (isMobile && showSidebar) {
+    return null;
+  }
+  
   // If no note is selected, show a placeholder or empty state
   if (!selectedNote) {
     return (
@@ -25,28 +54,14 @@ const MainContent = ({ selectedNote }) => {
     oneLiner: selectedNote.oneLiner || 'No medical history available',
   };
 
-  // Create assessment plan data object
-  const assessmentPlanData = {
-    title: "Assessment & Plan",
-    content: selectedNote.assessmentPlan || 'No assessment plan available'
-  };
-
-  // Create patient instructions data object
-  const patientInstructionsData = {
-    title: "Patient Instructions",
-    date: selectedNote.date ? formatDate(selectedNote.date) : 'No date available',
-    content: selectedNote.patientInstructions || 'No patient instructions available'
-  };
-
   return (
     <div className="main-content flex flex-col">
       <div className="sticky top-0 z-10 bg-white shadow-md">
         <PatientProfile patient={patient} />
         <NoteActionBar />
       </div>
-      <div className="overflow-y-auto flex-1 p-4">
-        <AssessmentPlan data={assessmentPlanData} />
-        <PatientInstructions data={patientInstructionsData} />
+      <div className="overflow-y-auto flex-1">
+        <NotesContent note={selectedNote} />
       </div>
     </div>
   );

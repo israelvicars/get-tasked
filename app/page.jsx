@@ -7,20 +7,6 @@ import MainContent from '../components/layout/MainContent';
 import useSelectedNote from '../utils/useSelectedNote';
 import { MdContentCopy, MdClose } from "react-icons/md";
 
-// Define a type for the note
-interface Note {
-  id: number;
-  patientName: string;
-  date: string;
-  time: string;
-  duration: string;
-  summary: string;
-  selected: boolean;
-  oneLiner: string;
-  assessmentPlan: string;
-  patientInstructions: string;
-}
-
 export default function Home() {
   const { selectedNote, selectNote, selectedNoteId } = useSelectedNote();
   const [showSidebar, setShowSidebar] = useState(true);
@@ -45,7 +31,7 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const handleNoteSelect = (noteId: number) => {
+  const handleNoteSelect = (noteId) => {
     selectNote(noteId);
     
     // Hide sidebar on mobile after selecting a note
@@ -72,6 +58,7 @@ export default function Home() {
         <MainContent 
           selectedNote={selectedNote} 
           key={selectedNoteId} 
+          showSidebar={showSidebar}
         />
         <div className="md:hidden fixed bottom-4 right-4 z-10">
           <button 
@@ -85,4 +72,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+} 

@@ -1,15 +1,14 @@
-import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const viewport: Viewport = {
+export const viewport = {
   width: "device-width",
   initialScale: 1.0,
 };
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Tasked",
   description: "Get freed from your tasks",
   icons: {
@@ -25,11 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
@@ -40,4 +35,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+} 

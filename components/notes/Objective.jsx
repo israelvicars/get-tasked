@@ -4,9 +4,9 @@ import React from 'react';
 import CollapsibleSection from '../common/CollapsibleSection';
 import IconButton from '../common/IconButton';
 import Button from '../common/Button';
-import { MdOutlineThumbUp, MdOutlineThumbDown, MdContentCopy, MdSend } from "react-icons/md";
+import { MdOutlineThumbUp, MdOutlineThumbDown, MdContentCopy } from "react-icons/md";
 
-const PatientInstructions = ({ data }) => {
+const Objective = ({ data }) => {
   const actionButtons = (
     <div className="flex space-x-2">
       <div className="dropdown">
@@ -32,24 +32,16 @@ const PatientInstructions = ({ data }) => {
   return (
     <div className="py-2 px-4">
       <CollapsibleSection 
-        title={data?.title || 'Patient Instructions'}
+        title="Objective"
         actions={actionButtons}
         defaultOpen={data?.defaultOpen}
       >
         <div>
-          <div className="mb-4">
-            <strong>Date:</strong> {data?.date || 'No date available'}
-          </div>
-          
           <div className="whitespace-pre-wrap">
-            {data?.content || 'No patient instructions available'}
+            {data?.objectiveNotes || 'No objective notes available'}
           </div>
           
-          <div className="mt-4 flex justify-end space-x-2">
-            <Button variant="primary" size="small" className="flex items-center">
-              <MdSend className="mr-1" /> Secure Send
-            </Button>
-            
+          <div className="mt-4 flex justify-end">
             <Button variant="secondary" size="small" className="flex items-center">
               <MdContentCopy className="mr-1" /> Copy
             </Button>
@@ -60,4 +52,4 @@ const PatientInstructions = ({ data }) => {
   );
 };
 
-export default PatientInstructions; 
+export default Objective; 
