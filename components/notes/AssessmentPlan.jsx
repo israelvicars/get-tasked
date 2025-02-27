@@ -4,7 +4,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import CollapsibleSection from '../common/CollapsibleSection';
 import IconButton from '../common/IconButton';
 import Button from '../common/Button';
-import { MdOutlineThumbUp, MdOutlineThumbDown, MdContentCopy, MdEdit, MdClose, MdCheck } from "react-icons/md";
+import { 
+  MdOutlineThumbUp, 
+  MdOutlineThumbDown, 
+  MdContentCopy, 
+  MdEdit, 
+  MdClose, 
+  MdCheck,
+  MdClearAll
+} from "react-icons/md";
 
 const EditorModal = ({ initialContent, onSave, onCancel }) => {
   const [modalContent, setModalContent] = useState(initialContent);
@@ -76,16 +84,110 @@ const EditorModal = ({ initialContent, onSave, onCancel }) => {
   );
 };
 
+// Task checkbox component
+const TaskCheckbox = ({ task, checked, onChange }) => {
+  return (
+    <div className="flex items-start group my-1">
+      <div 
+        className={`
+          flex-shrink-0 w-5 h-5 mr-2 border rounded cursor-pointer 
+          transition-all duration-200 flex items-center justify-center
+          group-hover:border-[var(--primary-color)]
+          ${checked 
+            ? 'bg-[var(--primary-color)] border-[var(--primary-color)] text-white' 
+            : 'border-gray-300 bg-white text-transparent'
+          }
+        `}
+        onClick={onChange}
+      >
+        {checked && <MdCheck size={16} />}
+      </div>
+      <span 
+        className={`flex-grow ${checked ? 'text-gray-500 line-through' : 'text-gray-900'}`}
+      >
+        {task}
+      </span>
+    </div>
+  );
+};
+
 const AssessmentPlan = ({ data }) => {
   const [content, setContent] = useState(data?.content || 'No assessment plan available');
   const [showEditor, setShowEditor] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [hideCompleted, setHideCompleted] = useState(false);
+  
+  // Parse content for tasks and update state
+  const parseTasksFromContent = (text) => {
+    const lines = text.split('\n');
+    const taskList = [];
+    
+    lines.forEach((line, index) => {
+      // Check if line starts with [] or [x] pattern
+      const uncheckedMatch = line.match(/^\s*\[\s*\]\s*(.+)$/);
+      const checkedMatch = line.match(/^\s*\[\s*x\s*\]\s*(.+)$/i);
+      
+      if (uncheckedMatch) {
+        taskList.push({
+          id: `task-${index}`,
+          text: uncheckedMatch[1],
+          checked: false,
+          originalLine: line,
+          lineIndex: index
+        });
+      } else if (checkedMatch) {
+        taskList.push({
+          id: `task-${index}`,
+          text: checkedMatch[1],
+          checked: true,
+          originalLine: line,
+          lineIndex: index
+        });
+      }
+    });
+    
+    setTasks(taskList);
+  };
   
   // Update content when data changes
   useEffect(() => {
     if (data?.content) {
       setContent(data.content);
+      parseTasksFromContent(data.content);
     }
   }, [data?.content]);
+  
+  // Toggle task completion
+  const toggleTask = (taskId) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        return { ...task, checked: !task.checked };
+      }
+      return task;
+    });
+    
+    setTasks(updatedTasks);
+    
+    // Update the content with the new task states
+    updateContentWithTasks(updatedTasks);
+  };
+  
+  // Update content with current task states
+  const updateContentWithTasks = (currentTasks) => {
+    const lines = content.split('\n');
+    
+    currentTasks.forEach(task => {
+      const checkboxPrefix = task.checked ? '[x] ' : '[] ';
+      lines[task.lineIndex] = checkboxPrefix + task.text;
+    });
+    
+    setContent(lines.join('\n'));
+  };
+  
+  // Clear completed tasks
+  const clearCompletedTasks = () => {
+    setHideCompleted(!hideCompleted);
+  };
   
   const handleEditClick = () => {
     setShowEditor(true);
@@ -93,12 +195,26 @@ const AssessmentPlan = ({ data }) => {
   
   const handleSave = (newContent) => {
     setContent(newContent);
+    parseTasksFromContent(newContent);
     setShowEditor(false);
   };
   
   const handleCancel = () => {
     setShowEditor(false);
   };
+  
+  // Calculate task progress
+  const completedTaskCount = tasks.filter(task => task.checked).length;
+  const totalTaskCount = tasks.length;
+  const hasCompletedTasks = completedTaskCount > 0;
+  
+  // Progress indicator styles
+  const progressPercentage = totalTaskCount > 0 ? (completedTaskCount / totalTaskCount) * 100 : 0;
+  
+  // Filter tasks based on hideCompleted state
+  const visibleTasks = hideCompleted 
+    ? tasks.filter(task => !task.checked) 
+    : tasks;
   
   const actionButtons = (
     <div className="flex space-x-2">
@@ -139,6 +255,47 @@ const AssessmentPlan = ({ data }) => {
     </Button>
   );
   
+  // Render content with task checkboxes
+  const renderContentWithTasks = () => {
+    if (tasks.length === 0) {
+      return <div className="whitespace-pre-wrap">{content}</div>;
+    }
+    
+    const lines = content.split('\n');
+    const taskLineIndices = tasks.map(task => task.lineIndex);
+    
+    // Create an array to hold rendered content
+    const renderedContent = [];
+    
+    lines.forEach((line, index) => {
+      // If this line is a task, render the task component instead
+      if (taskLineIndices.includes(index)) {
+        const task = tasks.find(t => t.lineIndex === index);
+        
+        // Skip if task is completed and we're hiding completed tasks
+        if (hideCompleted && task.checked) {
+          return;
+        }
+        
+        renderedContent.push(
+          <TaskCheckbox 
+            key={task.id}
+            task={task.text}
+            checked={task.checked}
+            onChange={() => toggleTask(task.id)}
+          />
+        );
+      } else {
+        // Regular line, not a task
+        renderedContent.push(
+          <div key={`line-${index}`} className="my-1">{line}</div>
+        );
+      }
+    });
+    
+    return renderedContent;
+  };
+  
   return (
     <>
       <div className="p-4">
@@ -146,8 +303,38 @@ const AssessmentPlan = ({ data }) => {
           title={data?.title || 'Assessment & Plan'}
           actions={actionButtons}
         >
+          {totalTaskCount > 0 && (
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-1">
+                <div className="text-sm text-gray-600">
+                  {completedTaskCount} of {totalTaskCount} tasks completed
+                </div>
+                
+                {hasCompletedTasks && (
+                  <Button 
+                    variant="text" 
+                    size="small" 
+                    className="flex items-center text-[var(--primary-color)] hover:opacity-80"
+                    onClick={clearCompletedTasks}
+                  >
+                    <MdClearAll className="mr-1" /> 
+                    {hideCompleted ? 'Show Completed' : 'Hide Completed'}
+                  </Button>
+                )}
+              </div>
+              
+              {/* Progress bar */}
+              <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[var(--primary-color)] transition-all duration-300 ease-in-out"
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
+          
           <div className="whitespace-pre-wrap">
-            {content}
+            {renderContentWithTasks()}
           </div>
           
           <div className="mt-4 flex justify-end">
