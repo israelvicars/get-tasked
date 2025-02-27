@@ -9,12 +9,6 @@ import { MdOutlineThumbUp, MdOutlineThumbDown, MdContentCopy, MdSend } from "rea
 const PatientInstructions = ({ data }) => {
   const actionButtons = (
     <div className="flex space-x-2">
-      <div className="dropdown">
-        <Button variant="secondary" size="small">
-          Learn Format
-        </Button>
-      </div>
-      
       <IconButton 
         icon={<MdOutlineThumbUp />} 
         title="Like"
