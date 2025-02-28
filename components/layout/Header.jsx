@@ -2,14 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Button from '../common/Button';
-import IconButton from '../common/IconButton';
-import { 
-  MdOutlineQuestionMark, 
-  MdChatBubbleOutline, 
-  MdOutlinePersonOutline,
-  MdAttachMoney 
-} from 'react-icons/md';
+import { FaGithub } from 'react-icons/fa';
 
 const Header = () => {
   return (
@@ -25,32 +18,15 @@ const Header = () => {
       </div>
       
       <div className="flex items-center">
-        <span className="mr-4 text-sm hidden md:inline">Your trial expires in 6 days</span>
-        <Button 
-          variant="secondary" 
-          className="mr-4"
+        <a 
+          href="https://github.com/israelvicars/get-tasked" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="flex items-center hover:text-blue-400 transition-colors"
         >
-          <span className="hidden md:inline">Subscribe</span>
-          <span className="md:hidden"><MdAttachMoney /></span>
-        </Button>
-        
-        <div className="flex space-x-2 md:space-x-4">
-          <IconButton 
-            icon={<MdOutlineQuestionMark />} 
-            title="Help"
-            className="text-white"
-          />
-          <IconButton 
-            icon={<MdChatBubbleOutline />} 
-            title="Chat"
-            className="text-white"
-          />
-          <IconButton 
-            icon={<MdOutlinePersonOutline />} 
-            title="Profile"
-            className="text-white"
-          />
-        </div>
+          <FaGithub className="text-xl mr-2" />
+          <span className="font-medium hidden md:inline">@israelvicars/get-tasked</span>
+        </a>
       </div>
     </header>
   );
