@@ -357,7 +357,7 @@ const AssessmentPlan: React.FC<AssessmentPlanProps> = ({ data }) => {
     const taskLineIndices = tasks.map(task => task.lineIndex);
     
     // Create an array to hold rendered content
-    const renderedContent = [];
+    const renderedContent: React.ReactNode[] = [];
     
     lines.forEach((line, index) => {
       // If this line is a task, render the task component instead
