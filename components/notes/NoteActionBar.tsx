@@ -6,10 +6,14 @@ import Button from '../common/Button';
 import IconButton from '../common/IconButton';
 import { MdCopyAll, MdSettings } from "react-icons/md";
 
-const NoteActionBar = () => {
-  const [visitType, setVisitType] = useState('New Patient');
-  const [pronouns, setPronouns] = useState('Select pronouns');
-  const [noteLength, setNoteLength] = useState('Standard');
+type VisitType = 'New Patient' | 'Follow-up' | 'Consultation' | 'Annual Exam';
+type Pronouns = 'He/Him' | 'She/Her' | 'They/Them' | 'Select pronouns';
+type NoteLength = 'Brief' | 'Standard' | 'Detailed';
+
+const NoteActionBar: React.FC = () => {
+  const [visitType, setVisitType] = useState<VisitType>('New Patient');
+  const [pronouns, setPronouns] = useState<Pronouns>('Select pronouns');
+  const [noteLength, setNoteLength] = useState<NoteLength>('Standard');
   
   const visitTypeOptions = ['New Patient', 'Follow-up', 'Consultation', 'Annual Exam'];
   const pronounOptions = ['He/Him', 'She/Her', 'They/Them', 'Select pronouns'];
@@ -23,7 +27,7 @@ const NoteActionBar = () => {
           <Dropdown 
             options={visitTypeOptions}
             selectedOption={visitType}
-            onSelect={setVisitType}
+            onSelect={(option) => setVisitType(option as VisitType)}
           />
         </div>
         
@@ -32,7 +36,7 @@ const NoteActionBar = () => {
           <Dropdown 
             options={pronounOptions}
             selectedOption={pronouns}
-            onSelect={setPronouns}
+            onSelect={(option) => setPronouns(option as Pronouns)}
           />
         </div>
         
@@ -41,7 +45,7 @@ const NoteActionBar = () => {
           <Dropdown 
             options={noteLengthOptions}
             selectedOption={noteLength}
-            onSelect={setNoteLength}
+            onSelect={(option) => setNoteLength(option as NoteLength)}
           />
         </div>
       </div>
@@ -72,4 +76,4 @@ const NoteActionBar = () => {
   );
 };
 
-export default NoteActionBar; 
+export default NoteActionBar;

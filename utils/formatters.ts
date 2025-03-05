@@ -1,4 +1,4 @@
-export const formatDate = (dateString) => {
+export const formatDate = (dateString: string): string => {
   try {
     // Handle MM/DD/YY format
     if (dateString.includes('/')) {
@@ -47,7 +47,7 @@ export const formatDate = (dateString) => {
   }
 };
 
-export const truncateText = (text, maxLength = 50) => {
+export const truncateText = (text: string, maxLength: number = 50): string => {
   if (!text) return '';
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';

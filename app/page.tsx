@@ -9,11 +9,11 @@ import { MdContentCopy, MdClose } from "react-icons/md";
 
 export default function Home() {
   const { selectedNote, selectNote, selectedNoteId } = useSelectedNote();
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
   
   // Hide sidebar by default on mobile
   useEffect(() => {
-    const handleResize = () => {
+    const handleResize = (): void => {
       if (window.innerWidth < 768) {
         setShowSidebar(false);
       } else {
@@ -31,7 +31,7 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  const handleNoteSelect = (noteId) => {
+  const handleNoteSelect = (noteId: number): void => {
     selectNote(noteId);
     
     // Hide sidebar on mobile after selecting a note
@@ -40,7 +40,7 @@ export default function Home() {
     }
   };
   
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     setShowSidebar(!showSidebar);
   };
   
@@ -72,4 +72,4 @@ export default function Home() {
       </div>
     </div>
   );
-} 
+}

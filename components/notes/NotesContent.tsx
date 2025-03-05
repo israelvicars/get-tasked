@@ -8,38 +8,76 @@ import AssessmentPlan from './AssessmentPlan';
 import PatientInstructions from './PatientInstructions';
 import TranscriptSummary from './TranscriptSummary';
 import { formatDate } from '../../utils/formatters';
+import { Note } from '../../utils/data';
 
-const NotesContent = ({ note }) => {
+interface NotesContentProps {
+  note: Note;
+}
+
+interface VisitSummaryData {
+  visitSummary: string;
+  defaultOpen: boolean;
+}
+
+interface SubjectiveData {
+  subjectiveNotes: string;
+  defaultOpen: boolean;
+}
+
+interface ObjectiveData {
+  objectiveNotes: string;
+  defaultOpen: boolean;
+}
+
+interface AssessmentPlanData {
+  content: string;
+  title: string;
+  defaultOpen: boolean;
+}
+
+interface PatientInstructionsData {
+  title: string;
+  date: string;
+  content: string;
+  defaultOpen: boolean;
+}
+
+interface TranscriptSummaryData {
+  transcriptSummary: string;
+  defaultOpen: boolean;
+}
+
+const NotesContent: React.FC<NotesContentProps> = ({ note }) => {
   // Prepare data objects for each component
-  const visitSummaryData = {
+  const visitSummaryData: VisitSummaryData = {
     visitSummary: note?.visitSummary,
     defaultOpen: false
   };
   
-  const subjectiveData = {
+  const subjectiveData: SubjectiveData = {
     subjectiveNotes: note?.subjectiveNotes,
     defaultOpen: false
   };
   
-  const objectiveData = {
+  const objectiveData: ObjectiveData = {
     objectiveNotes: note?.objectiveNotes,
     defaultOpen: false
   };
   
-  const assessmentPlanData = {
+  const assessmentPlanData: AssessmentPlanData = {
     content: note?.assessmentPlan,
     title: 'Assessment & Plan',
     defaultOpen: true
   };
   
-  const patientInstructionsData = {
+  const patientInstructionsData: PatientInstructionsData = {
     title: 'Patient Instructions',
     date: note?.date ? formatDate(note?.date) : 'No date available',
     content: note?.patientInstructions,
     defaultOpen: false
   };
   
-  const transcriptSummaryData = {
+  const transcriptSummaryData: TranscriptSummaryData = {
     transcriptSummary: note?.transcriptSummary,
     defaultOpen: false
   };
@@ -56,4 +94,4 @@ const NotesContent = ({ note }) => {
   );
 };
 
-export default NotesContent; 
+export default NotesContent;

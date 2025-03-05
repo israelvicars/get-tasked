@@ -1,4 +1,21 @@
-export const notes = [
+export interface Note {
+  id: number;
+  patientName: string;
+  date: string;
+  time: string;
+  duration: string;
+  summary: string;
+  selected: boolean;
+  oneLiner: string;
+  visitSummary: string;
+  subjectiveNotes: string;
+  objectiveNotes: string;
+  assessmentPlan: string;
+  patientInstructions: string;
+  transcriptSummary: string;
+}
+
+export const notes: Note[] = [
   {
     id: 1,
     patientName: 'Don Joh',
@@ -133,17 +150,17 @@ Current medication (lisinopril 10 mg daily) appears to need adjustment based on 
     patientInstructions: `Dear Ms. Jane Smith,
 
 It was great seeing you for your annual checkup today.
-I’m glad we had the chance to address your blood pressure concerns.
-Here’s a summary of our plan moving forward:
+I'm glad we had the chance to address your blood pressure concerns.
+Here's a summary of our plan moving forward:
 
-- Laboratory Tests: I’ve ordered a CBC and lipid panel to check your overall health.
+- Laboratory Tests: I've ordered a CBC and lipid panel to check your overall health.
 - Medications: Please increase your lisinopril dose to 20 mg daily starting tomorrow.
 - Self-Care Recommendations:
   - Monitor your blood pressure at home twice daily (morning and evening) and keep a log.
   - Try to lower salt in your diet and aim for 30 minutes of exercise most days.
-- Follow-Up: Let’s schedule a visit in 4 weeks to review your progress.
+- Follow-Up: Let's schedule a visit in 4 weeks to review your progress.
 
-Please don’t hesitate to contact me if you notice any unusual symptoms or have questions about these changes.
+Please don't hesitate to contact me if you notice any unusual symptoms or have questions about these changes.
 Take care!
 
 Best regards,
@@ -185,14 +202,14 @@ Lungs clear today with no wheezing noted.
     patientInstructions: `Dear Mr. Robert Johnson,
 
 Thanks for stopping by today to address your medication needs.
-I’ve renewed your prescription, and here are the details for your care:
+I've renewed your prescription, and here are the details for your care:
 
 - Medications: Your albuterol inhaler has been refilled (90 mcg, 200 puffs).
 Use 1-2 puffs as needed every 4-6 hours for wheezing or shortness of breath.
 - Self-Care Recommendations:
   - Keep using your inhaler as we discussed—make sure to shake it well before each use.
   - Watch for any increase in wheezing or difficulty breathing, and reach out if that happens.
-- Follow-Up: Let’s plan an asthma check-in in 6 months, unless you need to see me sooner.
+- Follow-Up: Let's plan an asthma check-in in 6 months, unless you need to see me sooner.
 
 Feel free to call if you have any questions about your inhaler or symptoms.
 Stay well!
@@ -236,7 +253,7 @@ Your blood sugar levels are looking great, and I'm pleased with your progress.
 Please continue taking metformin as prescribed and keep up with your healthy diet and exercise.
 We've ordered an HbA1c test to check your average blood sugar over the past few months.
 Let's schedule another visit in 3 months to review the results.
-If you have any concerns before then, don’t hesitate to reach out.
+If you have any concerns before then, don't hesitate to reach out.
 
 Take care!
 

@@ -3,7 +3,16 @@
 import React from 'react';
 import Button from '../common/Button';
 
-const PatientProfile = ({ patient }) => {
+interface Patient {
+  name: string;
+  oneLiner: string;
+}
+
+interface PatientProfileProps {
+  patient: Patient;
+}
+
+const PatientProfile: React.FC<PatientProfileProps> = ({ patient }) => {
   return (
     <div className="border-b border-gray-200 p-4">
       <div className="flex justify-between items-start mb-2">
@@ -21,4 +30,4 @@ const PatientProfile = ({ patient }) => {
   );
 };
 
-export default PatientProfile; 
+export default PatientProfile;

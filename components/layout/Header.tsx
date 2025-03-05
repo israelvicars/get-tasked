@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { FaGithub } from 'react-icons/fa';
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <header className="header">
       <div className="flex items-center">
@@ -32,4 +32,4 @@ const Header = () => {
   );
 };
 
-export default Header; 
+export default Header;
