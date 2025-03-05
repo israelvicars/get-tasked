@@ -4,21 +4,24 @@ import React, { useEffect, useState } from 'react';
 import PatientProfile from '../notes/PatientProfile';
 import NoteActionBar from '../notes/NoteActionBar';
 import NotesContent from '../notes/NotesContent';
-import { formatDate } from '../../utils/formatters';
+import { Note } from '../../utils/data';
 
-/**
- * MainContent component
- * @param {Object} props
- * @param {Object} props.selectedNote - The selected note to display
- * @param {boolean} [props.showSidebar=false] - Whether the sidebar is visible (for mobile)
- */
-const MainContent = (props) => {
-  const { selectedNote, showSidebar = false } = props;
-  const [isMobile, setIsMobile] = useState(false);
+interface MainContentProps {
+  selectedNote: Note | null;
+  showSidebar?: boolean;
+}
+
+interface Patient {
+  name: string;
+  oneLiner: string;
+}
+
+const MainContent: React.FC<MainContentProps> = ({ selectedNote, showSidebar = false }) => {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   
   // Check if we're on mobile
   useEffect(() => {
-    const checkMobile = () => {
+    const checkMobile = (): void => {
       setIsMobile(window.innerWidth < 768);
     };
     
@@ -49,7 +52,7 @@ const MainContent = (props) => {
   }
 
   // Create a patient object from the selected note
-  const patient = {
+  const patient: Patient = {
     name: selectedNote.patientName || 'Unknown Patient',
     oneLiner: selectedNote.oneLiner || 'No medical history available',
   };
@@ -67,4 +70,4 @@ const MainContent = (props) => {
   );
 };
 
-export default MainContent; 
+export default MainContent;

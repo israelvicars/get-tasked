@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import CollapsibleSection from '../common/CollapsibleSection';
 import IconButton from '../common/IconButton';
 import Button from '../common/Button';
@@ -14,9 +14,33 @@ import {
   MdClearAll
 } from "react-icons/md";
 
-const EditorModal = ({ initialContent, onSave, onCancel }) => {
-  const [modalContent, setModalContent] = useState(initialContent);
-  const textareaRef = useRef(null);
+interface EditorModalProps {
+  initialContent: string;
+  onSave: (content: string) => void;
+  onCancel: () => void;
+}
+
+interface Task {
+  id: string;
+  text: string;
+  checked: boolean;
+  originalLine: string;
+  lineIndex: number;
+}
+
+interface AssessmentPlanData {
+  content?: string;
+  title?: string;
+  defaultOpen?: boolean;
+}
+
+interface AssessmentPlanProps {
+  data: AssessmentPlanData;
+}
+
+const EditorModal: React.FC<EditorModalProps> = ({ initialContent, onSave, onCancel }) => {
+  const [modalContent, setModalContent] = useState<string>(initialContent);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   
   useEffect(() => {
     // Focus the textarea when the modal opens
@@ -31,11 +55,11 @@ const EditorModal = ({ initialContent, onSave, onCancel }) => {
     };
   }, []);
   
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     setModalContent(e.target.value);
   };
   
-  const handleSave = () => {
+  const handleSave = (): void => {
     onSave(modalContent);
   };
   
@@ -84,8 +108,14 @@ const EditorModal = ({ initialContent, onSave, onCancel }) => {
   );
 };
 
+interface TaskCheckboxProps {
+  task: string;
+  checked: boolean;
+  onChange: () => void;
+}
+
 // Task checkbox component
-const TaskCheckbox = ({ task, checked, onChange }) => {
+const TaskCheckbox: React.FC<TaskCheckboxProps> = ({ task, checked, onChange }) => {
   return (
     <div className="flex items-start group my-1">
       <div 
@@ -111,18 +141,18 @@ const TaskCheckbox = ({ task, checked, onChange }) => {
   );
 };
 
-const AssessmentPlan = ({ data }) => {
-  const [content, setContent] = useState(data?.content || 'No assessment plan available');
-  const [showEditor, setShowEditor] = useState(false);
-  const [tasks, setTasks] = useState([]);
-  const [hideCompleted, setHideCompleted] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const textareaRef = useRef(null);
+const AssessmentPlan: React.FC<AssessmentPlanProps> = ({ data }) => {
+  const [content, setContent] = useState<string>(data?.content || 'No assessment plan available');
+  const [showEditor, setShowEditor] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [hideCompleted, setHideCompleted] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   
   // Parse content for tasks and update state
-  const parseTasksFromContent = (text) => {
+  const parseTasksFromContent = (text: string): void => {
     const lines = text.split('\n');
-    const taskList = [];
+    const taskList: Task[] = [];
     
     lines.forEach((line, index) => {
       // Check if line starts with [] or [x] pattern
@@ -170,7 +200,7 @@ const AssessmentPlan = ({ data }) => {
   }, [isEditing]);
   
   // Toggle task completion
-  const toggleTask = (taskId) => {
+  const toggleTask = (taskId: string): void => {
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         return { ...task, checked: !task.checked };
@@ -185,7 +215,7 @@ const AssessmentPlan = ({ data }) => {
   };
   
   // Update content with current task states
-  const updateContentWithTasks = (currentTasks) => {
+  const updateContentWithTasks = (currentTasks: Task[]): void => {
     const lines = content.split('\n');
     
     currentTasks.forEach(task => {
@@ -197,39 +227,39 @@ const AssessmentPlan = ({ data }) => {
   };
   
   // Clear completed tasks
-  const clearCompletedTasks = () => {
+  const clearCompletedTasks = (): void => {
     setHideCompleted(!hideCompleted);
   };
   
-  const handleEditClick = () => {
+  const handleEditClick = (): void => {
     setIsEditing(true);
   };
   
-  const handleDoneClick = () => {
+  const handleDoneClick = (): void => {
     setIsEditing(false);
     parseTasksFromContent(content);
   };
   
-  const handleSave = (newContent) => {
+  const handleSave = (newContent: string): void => {
     setContent(newContent);
     parseTasksFromContent(newContent);
     setShowEditor(false);
   };
   
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setShowEditor(false);
   };
   
-  const handleTextChange = (e) => {
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     setContent(e.target.value);
   };
   
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     setIsEditing(false);
     parseTasksFromContent(content);
   };
   
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>): void => {
     // Save on Ctrl+Enter or Cmd+Enter
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       setIsEditing(false);
@@ -253,11 +283,6 @@ const AssessmentPlan = ({ data }) => {
   
   // Progress indicator styles
   const progressPercentage = totalTaskCount > 0 ? (completedTaskCount / totalTaskCount) * 100 : 0;
-  
-  // Filter tasks based on hideCompleted state
-  const visibleTasks = hideCompleted 
-    ? tasks.filter(task => !task.checked) 
-    : tasks;
   
   const actionButtons = (
     <div className="flex space-x-2">
@@ -340,18 +365,20 @@ const AssessmentPlan = ({ data }) => {
         const task = tasks.find(t => t.lineIndex === index);
         
         // Skip if task is completed and we're hiding completed tasks
-        if (hideCompleted && task.checked) {
+        if (task && hideCompleted && task.checked) {
           return;
         }
         
-        renderedContent.push(
-          <TaskCheckbox 
-            key={task.id}
-            task={task.text}
-            checked={task.checked}
-            onChange={() => toggleTask(task.id)}
-          />
-        );
+        if (task) {
+          renderedContent.push(
+            <TaskCheckbox 
+              key={task.id}
+              task={task.text}
+              checked={task.checked}
+              onChange={() => toggleTask(task.id)}
+            />
+          );
+        }
       } else {
         // Regular line, not a task - make it clickable for editing
         renderedContent.push(
@@ -429,4 +456,4 @@ const AssessmentPlan = ({ data }) => {
   );
 };
 
-export default AssessmentPlan; 
+export default AssessmentPlan;

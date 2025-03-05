@@ -1,21 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notes } from './data';
-
-// Define the Note type
-interface Note {
-  id: number;
-  patientName: string;
-  date: string;
-  time: string;
-  duration: string;
-  summary: string;
-  selected: boolean;
-  oneLiner: string;
-  assessmentPlan: string;
-  patientInstructions: string;
-}
+import { notes, Note } from './data';
 
 export const useSelectedNote = () => {
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(notes[0]?.id || null);
@@ -27,7 +13,7 @@ export const useSelectedNote = () => {
       const note = notes.find(n => n.id === selectedNoteId);
       if (note) {
         // Create a new object to ensure reactivity
-        setSelectedNote({...note} as Note);
+        setSelectedNote({...note});
       }
     } else {
       setSelectedNote(null);

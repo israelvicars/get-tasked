@@ -1,3 +1,4 @@
+import React from 'react';
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "../styles/globals.css";
@@ -25,7 +26,11 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <head>
@@ -37,4 +42,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-} 
+}

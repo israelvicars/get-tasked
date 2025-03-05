@@ -1,17 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, InputHTMLAttributes } from 'react';
 import { MdSearch, MdClose } from 'react-icons/md';
 
-const SearchInput = ({ 
+interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  placeholder?: string;
+  onChange?: (value: string) => void;
+  className?: string;
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ 
   placeholder = 'Search...', 
   onChange,
   className = '',
   ...props 
 }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
   
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
     if (onChange) {
@@ -53,4 +59,4 @@ const SearchInput = ({
   );
 };
 
-export default SearchInput; 
+export default SearchInput;

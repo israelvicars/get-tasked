@@ -3,29 +3,37 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MdArrowDropDown } from 'react-icons/md';
 
-const Dropdown = ({ 
+interface DropdownProps {
+  options: string[];
+  selectedOption: string | null;
+  onSelect: (option: string) => void;
+  placeholder?: string;
+  className?: string;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({ 
   options = [], 
   selectedOption, 
   onSelect,
   placeholder = 'Select an option',
   className = '',
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   
-  const handleSelect = (option) => {
+  const handleSelect = (option: string): void => {
     onSelect(option);
     setIsOpen(false);
   };
   
-  const toggleDropdown = () => {
+  const toggleDropdown = (): void => {
     setIsOpen(!isOpen);
   };
   
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -64,4 +72,4 @@ const Dropdown = ({
   );
 };
 
-export default Dropdown; 
+export default Dropdown;

@@ -1,18 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { MdExpandLess, MdExpandMore } from 'react-icons/md';
 
-const CollapsibleSection = ({ 
+interface CollapsibleSectionProps {
+  title: string;
+  children: ReactNode;
+  defaultOpen?: boolean;
+  className?: string;
+  actions?: ReactNode;
+}
+
+const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({ 
   title, 
   children,
   defaultOpen = true,
   className = '',
   actions = null,
 }) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
   
-  const toggleSection = () => {
+  const toggleSection = (): void => {
     setIsOpen(!isOpen);
   };
   
@@ -35,4 +43,4 @@ const CollapsibleSection = ({
   );
 };
 
-export default CollapsibleSection; 
+export default CollapsibleSection;

@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Button from '../common/Button';
+import React, { useState } from 'react';
 import SearchInput from '../common/SearchInput';
-import { notes } from '../../utils/data';
+import { notes, Note } from '../../utils/data';
 import { MdAdd } from 'react-icons/md';
 
-const NoteListItem = ({ note, isSelected, onClick }) => {
+interface NoteListItemProps {
+  note: Note;
+  isSelected: boolean;
+  onClick: (noteId: number) => void;
+}
+
+const NoteListItem: React.FC<NoteListItemProps> = ({ note, isSelected, onClick }) => {
   return (
     <div 
       className={`p-4 border-b border-gray-200 cursor-pointer hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}
@@ -21,16 +26,20 @@ const NoteListItem = ({ note, isSelected, onClick }) => {
   );
 };
 
-const Sidebar = ({ onSelectNote }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedNoteId, setSelectedNoteId] = useState(notes[0]?.id);
+interface SidebarProps {
+  onSelectNote?: (noteId: number) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onSelectNote }) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedNoteId, setSelectedNoteId] = useState<number | undefined>(notes[0]?.id);
   
   const filteredNotes = notes.filter(note => 
     note.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     note.summary.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  const handleNoteClick = (noteId) => {
+  const handleNoteClick = (noteId: number): void => {
     setSelectedNoteId(noteId);
     if (onSelectNote) {
       onSelectNote(noteId);
@@ -68,7 +77,7 @@ const Sidebar = ({ onSelectNote }) => {
         ))}
         {filteredNotes.length === 0 && (
           <div className="p-4 text-center text-gray-500">
-            No notes found matching "{searchTerm}"
+            No notes found matching &quot;{searchTerm}&quot;
           </div>
         )}
       </div>
@@ -76,4 +85,4 @@ const Sidebar = ({ onSelectNote }) => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;
