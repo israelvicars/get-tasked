@@ -1,8 +1,13 @@
 # GetTasked: Task Management for SOAP Notes
+
 **Inline Task UI**
+
 ![GetTasked Checkbox UI](/docs/checkbox-interaction.gif)
+
 **Live Prototype**: [gettasked.fyi](https://www.gettasked.fyi/) 
+
 ![GetTasked MVP Demo](/docs/editing-workflow.gif)
+
 ---
 ## Introduction
 GetTasked is a functional prototype that embeds seamless task management into medical SOAP notes. Built in one week, it demonstrates how generative AI can accelerate software development—from research to deployment—to deliver user-focused solutions. This project aims to enhance healthcare workflows by providing innovative solutions for task management.
